@@ -30,6 +30,7 @@ const endGame =()=>{
     clearInterval(t);
     document.getElementsByClassName("info")[0].innerHTML="";
     document.getElementById("score").parentElement.classList.add("backgroundRed");
+    document.getElementById("score").classList.add("backgroundRed");
     document.getElementById("main-grid").innerHTML=`<div class="underlay"><button id="reload">Rigioca!</button></div>`;
     document.getElementById("reload").addEventListener("click",()=>location.reload());
 }
@@ -188,7 +189,8 @@ document.addEventListener("keydown",function(event){
 /**add event listener to button start */
 document.getElementById("start").addEventListener("click", function(){
     if(gameStart==false){
-        document.getElementById("start").innerHTML="";
+        // document.getElementById("start").innerHTML="";
+        document.getElementById("start").classList.add("d-none");
         load();
         loadGameplay();
         var audio = new Audio('media/Doom_OST.mp3');
