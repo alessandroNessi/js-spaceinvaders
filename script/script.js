@@ -30,6 +30,31 @@ function load(){
                 bullets.splice(i,1);
             }
         }
+        if(count%5==0 && count%10!=0){
+            if(enemies[0].x%2==0){
+                for(let i=0;i<enemies.length;i++){
+                    drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
+                    enemies[i].x+=1;
+                    if(enemies[i].y==20){
+                        clearInterval(t);
+                        alert("you lost");   
+                    }
+                    drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
+                    wave=true;
+                }
+            }else{
+                for(let i=0;i<enemies.length;i++){
+                    drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
+                    enemies[i].x-=1;
+                    if(enemies[i].y==20){
+                        clearInterval(t);
+                        alert("you lost");   
+                    }
+                    drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
+                }
+                wave=false;
+            }
+        }
         if(count%10==0){
             for(let i=0;i<enemies.length;i++){
                 drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
@@ -42,7 +67,7 @@ function load(){
             }
         }
         count++;
-    }, 80);
+    }, 40);
 };
 
 /**a function that draw the ship in a cell based on it's kind */
@@ -102,9 +127,7 @@ document.addEventListener("keydown",function(event){
             }
             break;
         case 'Space':
-            console.log("shot");
             bullets.push(new bullet(spaceShip.x,spaceShip.y-1));
-            console.log(bullets);
             break;
         default:
             break;
@@ -115,8 +138,8 @@ load();
 var spaceShip= new starShip(1,18);
 var bullets= [];
 var enemies= [];
-var count=0;
-let x=0, y=0;
+var wave=false;
+let x=0, y=0, count=0;
 for(let i=0;i<20;i++){
     if(x>19){
         x-=20;
@@ -126,5 +149,4 @@ for(let i=0;i<20;i++){
     drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
     x+=2
 }
-console.log(enemies);
 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind);
