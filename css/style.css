@@ -6,10 +6,10 @@
 }
 #main-grid{
     margin: auto;
-    margin-top: 50px;
+    margin-top: 20px;
     border: 1px solid black;
-    width: 600px;
-    height: 600px;
+    width: 700px;
+    height: 700px;
     display: flex;
     flex-wrap: wrap;
     background-image: url("../media/sfondo.png");
@@ -42,4 +42,10 @@
 .info{
     text-align: center;
     margin-top: 10px;
+}
+.scoreContainer{
+    text-align: center;
+}
+.d-none{
+    display: none;
 }
