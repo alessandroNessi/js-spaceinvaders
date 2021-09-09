@@ -28,8 +28,10 @@ function enemy(x,y,oscillation){
 /**endgame */
 const endGame =()=>{
     clearInterval(t);
-    alert(`Game Over, your score is: ${score}`);  
-    location.reload();
+    document.getElementsByClassName("info")[0].innerHTML="";
+    document.getElementById("score").parentElement.classList.add("backgroundRed");
+    document.getElementById("main-grid").innerHTML=`<div class="underlay"><button id="reload">Rigioca!</button></div>`;
+    document.getElementById("reload").addEventListener("click",()=>location.reload());
 }
 
 /**gameplay function */
@@ -186,6 +188,7 @@ document.addEventListener("keydown",function(event){
 /**add event listener to button start */
 document.getElementById("start").addEventListener("click", function(){
     if(gameStart==false){
+        document.getElementById("start").innerHTML="";
         load();
         loadGameplay();
         var audio = new Audio('media/Doom_OST.mp3');
