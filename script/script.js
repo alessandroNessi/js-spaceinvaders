@@ -25,6 +25,13 @@ function enemy(x,y,oscillation){
     this.kind="enemy";
 }
 
+/**endgame */
+const endGame =()=>{
+    clearInterval(t);
+    alert(`Game Over, your score is: ${score}`);  
+    location.reload();
+}
+
 /**gameplay function */
 const gamePlay= () => {
     for(let i=0;i<bullets.length;i++){
@@ -40,6 +47,8 @@ const gamePlay= () => {
                     drawcell(bullets[i].x,bullets[i].y,);
                     enemies.splice(t,1);
                     bullets.splice(i,1);
+                    score++;
+                    document.getElementById("score").innerHTML=score;
                     if(enemies.length==0){
                         // alert("you win");
                         difficoult-=10;
@@ -59,9 +68,7 @@ const gamePlay= () => {
                 drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
                 enemies[i].x+=1;
                 if(enemies[i].y==20){
-                    clearInterval(t);
-                    alert("you lost");   
-                    location.reload();
+                    endGame();
                 }
                 drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
                 wave=true;
@@ -71,9 +78,7 @@ const gamePlay= () => {
                 drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
                 enemies[i].x-=1;
                 if(enemies[i].y==20){
-                    clearInterval(t);
-                    alert("you lost");
-                    location.reload();
+                    endGame();
                 }
                 drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
             }
@@ -85,9 +90,7 @@ const gamePlay= () => {
             drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
             enemies[i].y+=1;
             if(enemies[i].y==20){
-                clearInterval(t);
-                alert("you lost");
-                location.reload();
+                endGame();
             }
             drawcell(enemies[i].x,enemies[i].y,enemies[i].kind);
         }
