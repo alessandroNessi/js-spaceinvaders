@@ -3,7 +3,7 @@ const bullets= [];
 const enemies= [];
 let t,gameStart=false;
 let wave=false;
-let x=0, y=0, count=0, score=0, difficoult=100;
+let x=0, y=0, count=0, score=0, difficoult=100, autofire=false;
 
 /**objects */
 //starship
@@ -37,6 +37,9 @@ const endGame =()=>{
 
 /**gameplay function */
 const gamePlay= () => {
+    if(autofire==true){
+        bullets.push(new bullet(spaceShip.x,spaceShip.y-1));
+    }
     for(let i=0;i<bullets.length;i++){
         drawcell(bullets[i].x,bullets[i].y,bullets[i].kind);
         if(bullets[i].y==spaceShip.y-2){
@@ -163,6 +166,7 @@ const drawcell = (x,y,kind)=>{
 
 /**add an eventlistener on the page */
 document.addEventListener("keydown",function(event){
+    console.log(event.code);
     switch (event.code) {
         case 'ArrowLeft'://if i press arrowleft
             if(spaceShip.x>0){
@@ -179,7 +183,12 @@ document.addEventListener("keydown",function(event){
             }
             break;
         case 'Space':
-            bullets.push(new bullet(spaceShip.x,spaceShip.y-1));//push an object bullet in the bullets array
+            if(autofire==false){
+                bullets.push(new bullet(spaceShip.x,spaceShip.y-1));//push an object bullet in the bullets array
+            }
+            break;
+        case 'KeyF':
+            autofire=true;
             break;
         default:
             break;
