@@ -1,9 +1,12 @@
 const spaceShip= new starShip(9,19);
-const bullets= [];
+const bullets= [], ufoBullets= [];
 const enemies= [];
+let enemyShot="";//i save here the array index for the enemy who is shooting
 let t,gameStart=false;
 let wave=false;
 let x=0, y=0, count=0, score=0, difficoult=100, autofire=false;
+
+const randomMinMax = (min,max) => (Math.floor(Math.random()*(max-min)+min));
 
 /**objects */
 //starship
@@ -11,7 +14,7 @@ function starShip(x,y){
     this.x=x;
     this.y=y;
     this.kind="starShip";
-    this.collided = () => enemies.some((element) => (element.x==this.x && element.y==this.y));
+    this.collided = () => enemies.some((element) => (element.x==this.x && element.y==this.y))||ufoBullets.some((element) => (element.x==this.x && element.y==this.y));
 }
 //bullet
 function bullet(x,y){
@@ -26,6 +29,11 @@ function enemy(x,y){
     this.kind="enemy";
     this.collided = () => {return(this.x==spaceShip.x && this.y==spaceShip.y)};
 }
+function ufoBullet(x,y){
+    this.x=x;
+    this.y=y;
+    this.kind="ufoBullet";
+}
 
 /**endgame */
 const endGame =()=>{
@@ -39,9 +47,29 @@ const endGame =()=>{
 
 /**gameplay function */
 const gamePlay= () => {
+
+    //with autofire add a bullet per round
     if(autofire==true){
         bullets.push(new bullet(spaceShip.x,spaceShip.y-1));
     }
+
+    //check if the enemy hit us
+    if(count%5){
+        ufoBullets.forEach((element,index,array)=>{
+            drawcell(element.x,element.y,element.kind,"remove");
+            if(element.y!=19){
+                element.y+=1;
+                drawcell(element.x,element.y,element.kind,"add");
+                if(spaceShip.collided()){
+                    endGame();
+                }
+            }else{
+                array.splice(index,1);
+            }
+        });
+    }
+
+    //check if we hit the enemy
     for(let i=0;i<bullets.length;i++){
         drawcell(bullets[i].x,bullets[i].y,bullets[i].kind,"remove");
         if(bullets[i].y!=0){
@@ -56,7 +84,6 @@ const gamePlay= () => {
                     score++;
                     document.getElementById("score").innerHTML=score;
                     if(enemies.length==0){
-                        // alert("you win");
                         if(difficoult>60){
                             difficoult-=10;
                         }
@@ -70,6 +97,7 @@ const gamePlay= () => {
             bullets.splice(i,1);
         }
     }
+
     if(count%5==0 && count%10!=0){//conditions for zig zag moving
         if(enemies[0].x%2==0){
             for(let i=0;i<enemies.length;i++){
@@ -95,6 +123,7 @@ const gamePlay= () => {
             wave=false;
         }
     }
+
     if(count%10==0){
         for(let i=0;i<enemies.length;i++){
             drawcell(enemies[i].x,enemies[i].y,enemies[i].kind,"remove");//delete old ufo position
@@ -106,6 +135,15 @@ const gamePlay= () => {
             drawcell(enemies[i].x,enemies[i].y,enemies[i].kind,"add");//draw new ufo position
         }
     }
+
+    //check if the ufo is shooting and add the bullet
+    if((randomMinMax(1,1000) / enemies.length) < 5){
+        // alert(enemies.length);
+        enemyShot=randomMinMax(0,(enemies.length+1));
+        ufoBullets.push(new ufoBullet(enemies[enemyShot].x, enemies[enemyShot].y));
+        enemyShot="";
+    }
+
     count++;
 }
 
@@ -124,9 +162,9 @@ const loadGameplay = ()=>{
             x-=20;
             y+=2;
         }
-        enemies.push(new enemy(x,y,"left"));
+        enemies.push(new enemy(x,y,"enemy"));
         drawcell(enemies[i].x,enemies[i].y,enemies[i].kind,"add");
-        x+=2
+        x+=2;
     }
     drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"add");
     t = setInterval(function(){
@@ -156,21 +194,28 @@ const drawcell = (x,y,kind,addRemove)=>{
     switch (kind){
         case "starShip":
             if(addRemove=="remove"){
-            document.getElementsByClassName("cell")[cell].classList.value="cell";
+                document.getElementsByClassName("cell")[cell].classList.value="cell";  
             }else if(addRemove=="add"){
                 document.getElementsByClassName("cell")[cell].classList.add("starship");
             }
             break;
         case "bullet":
             if(addRemove=="remove"){
-            document.getElementsByClassName("cell")[cell].classList.value="cell";
+                document.getElementsByClassName("cell")[cell].classList.value="cell";
             }else if(addRemove=="add"){
                 document.getElementsByClassName("cell")[cell].classList.add("bullet");
             }
             break;
+        case "ufoBullet":
+            if(addRemove=="remove"){
+                document.getElementsByClassName("cell")[cell].classList.value="cell";
+            }else if(addRemove=="add"){
+                document.getElementsByClassName("cell")[cell].classList.add("ufoBullet");
+            }
+            break;
         case "enemy":
             if(addRemove=="remove"){
-            document.getElementsByClassName("cell")[cell].classList.value="cell";
+                document.getElementsByClassName("cell")[cell].classList.value="cell";
             }else if(addRemove=="add"){
                 document.getElementsByClassName("cell")[cell].classList.add("enemy");
             }

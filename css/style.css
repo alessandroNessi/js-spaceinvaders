@@ -38,6 +38,12 @@ body{
     background-size: 50%;
     background-repeat: no-repeat;
 }
+.ufoBullet{
+    background-image: url("../media/ufobullet.png");
+    background-position: center;
+    background-size: 50%;
+    background-repeat: no-repeat;
+}
 .enemy{
     background-image: url("../media/ufo.png");
     background-position: center;
