@@ -9,11 +9,9 @@ let x=0, y=0, count=0, score=0, difficoult=100, autofire=false;
 //starship
 function starShip(x,y){
     this.x=x;
-    let xPrec="start";
     this.y=y;
-    let yPrec="start";
     this.kind="starShip";
-
+    this.collided = () => enemies.some((element) => (element.x==this.x && element.y==this.y));
 }
 //bullet
 function bullet(x,y){
@@ -22,10 +20,11 @@ function bullet(x,y){
     this.kind="bullet";
 }
 //enemy
-function enemy(x,y,oscillation){
+function enemy(x,y){
     this.x=x;
     this.y=y;
     this.kind="enemy";
+    this.collided = () => {return(this.x==spaceShip.x && this.y==spaceShip.y)};
 }
 
 /**endgame */
@@ -45,9 +44,6 @@ const gamePlay= () => {
     }
     for(let i=0;i<bullets.length;i++){
         drawcell(bullets[i].x,bullets[i].y,bullets[i].kind,"remove");
-        // if(bullets[i].y==spaceShip.y-2){
-        //     drawcell(bullets[i].x,bullets[i].y+1,bullets[i].kind,"remove");
-        // }
         if(bullets[i].y!=0){
             bullets[i].y-=1;
             drawcell(bullets[i].x,bullets[i].y,bullets[i].kind,"add");
@@ -82,7 +78,7 @@ const gamePlay= () => {
                 if(enemies[i].y==20){//check if the ufo reached the bottom line
                     endGame();
                 }
-                checkShipImpact("movingEnemy",enemies[i]);//check if the ship impact an enemy
+                if(enemies[i].collided()){endGame();}//check if the ship impact an enemy
                 drawcell(enemies[i].x,enemies[i].y,enemies[i].kind,"add");//draw new ufo position
                 wave=true;
             }
@@ -93,7 +89,7 @@ const gamePlay= () => {
                 if(enemies[i].y==20){//check if the ufo reached the bottom line
                     endGame();
                 }
-                checkShipImpact("movingEnemy",enemies[i]);//check if the ship impact an enemy
+                if(enemies[i].collided()){endGame();}//check if the ship impact an enemy
                 drawcell(enemies[i].x,enemies[i].y,enemies[i].kind,"add");//draw new ufo position
             }
             wave=false;
@@ -106,7 +102,7 @@ const gamePlay= () => {
             if(enemies[i].y==20){//check if the ufo reached the bottom line
                 endGame();
             }
-            checkShipImpact("movingEnemy",enemies[i]);//check if the ship impact an enemy
+            if(enemies[i].collided()){endGame();}//check if the ship impact an enemy
             drawcell(enemies[i].x,enemies[i].y,enemies[i].kind,"add");//draw new ufo position
         }
     }
@@ -185,19 +181,6 @@ const drawcell = (x,y,kind,addRemove)=>{
     }
 }
 
-/**check if the ships moving impacted any enemy */
-function checkShipImpact(font,enemyShip){
-    if(font=="movingShip"){
-        if(enemies.some((element) => (element.x==spaceShip.x && element.y==spaceShip.y))){
-            endGame();
-        }
-    }else if(font=="movingEnemy"){
-        if(enemyShip.x==spaceShip.x && enemyShip.y==spaceShip.y){
-            endGame();
-        }
-    }
-}
-
 /**add an eventlistener on the page */
 document.addEventListener("keydown",function(event){
     console.log(event.code);
@@ -206,7 +189,7 @@ document.addEventListener("keydown",function(event){
             if(spaceShip.x>0){
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"remove");//delete last spaceship position
                 spaceShip.x-=1;
-                checkShipImpact("movingShip");
+                if(spaceShip.collided()){endGame();}//check ships collision
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"add");//draw new spaceship position
             }
             break;  
@@ -214,7 +197,7 @@ document.addEventListener("keydown",function(event){
             if(spaceShip.x<19){
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"remove");//delete last spaceship position
                 spaceShip.x+=1;
-                checkShipImpact("movingShip");
+                if(spaceShip.collided()){endGame();}//check ships collision
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"add");//draw new spaceship position
             }
             break;
@@ -222,7 +205,7 @@ document.addEventListener("keydown",function(event){
             if(spaceShip.y>0){
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"remove");//delete last spaceship position
                 spaceShip.y-=1;
-                checkShipImpact("movingShip");
+                if(spaceShip.collided()){endGame();}//check ships collision
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"add");//draw new spaceship position
             }
             break;  
@@ -230,7 +213,7 @@ document.addEventListener("keydown",function(event){
             if(spaceShip.y<19){
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"remove");//delete last spaceship position
                 spaceShip.y+=1;
-                checkShipImpact("movingShip");
+                if(spaceShip.collided()){endGame();}//check ships collision
                 drawcell(spaceShip.x,spaceShip.y,spaceShip.kind,"add");//draw new spaceship position
             }
             break;
