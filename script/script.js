@@ -53,13 +53,13 @@ const gamePlay= () => {
         bullets.push(new bullet(spaceShip.x,spaceShip.y-1));
     }
 
-    //check if the enemy hit us
+    //check if the enemy hit us and moves the projectiles
     if(count%5){
         ufoBullets.forEach((element,index,array)=>{
-            drawcell(element.x,element.y,element.kind,"remove");
+            drawcell(element.x,element.y,element.kind,"remove");//delete the bullet last position
             if(element.y!=19){
                 element.y+=1;
-                drawcell(element.x,element.y,element.kind,"add");
+                drawcell(element.x,element.y,element.kind,"add");//draw bullet new position
                 if(spaceShip.collided()){
                     endGame();
                 }
